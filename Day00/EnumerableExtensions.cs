@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Day00
 {
@@ -23,5 +24,7 @@ namespace Day00
         public static IEnumerable<int> Split(this IEnumerable<string> source, char split)
             => source.SelectMany(x => x.Split(split), (a, b) => int.Parse(b));
 
+        public static T Second<T>(this IEnumerable<T> source) => source.ElementAt(1);
+        public static T Third<T>(this IEnumerable<T> source) => source.ElementAt(2);
     }
 }

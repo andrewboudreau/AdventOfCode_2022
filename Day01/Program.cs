@@ -1,27 +1,22 @@
-﻿using static Day00.ReadInputs;
+﻿using Day00;
+using static Day00.ReadInputs;
 
-Console.WriteLine(
-    ReadInts()
-        .Aggregate(
-            seed: (prev: int.MaxValue, increases: 0),
-            func: (acc, next) =>
-                (next, (next > acc.prev)
-                    ? acc.increases + 1
-                    : acc.increases)));
+Read()
+    .Aggregate(
+        new List<List<int>>() { new() },
+        (acc, calories) =>
+        {
+            if (string.IsNullOrEmpty(calories)) 
+                acc.Add(new());
+            else
+                acc[^1].Add(int.Parse(calories));
 
-
-var prev = new int[3] { int.MaxValue, int.MaxValue, int.MaxValue, };
-
-Console.WriteLine(ReadInts().Aggregate(
-    seed: (prev, increases: 0),
-    func: (acc, next) =>
+            return acc;
+        }, 
+        acc => acc.Select(x => x.Sum()).OrderByDescending(x => x))
+    .ToConsole(totals => new[]
     {
-        acc.increases +=
-            next + acc.prev[2] + acc.prev[1] > acc.prev[0] + acc.prev[1] + acc.prev[2]
-                ? 1 : 0;
-
-        acc.prev[0] = acc.prev[1];
-        acc.prev[1] = acc.prev[2];
-        acc.prev[2] = next;
-        return acc;
-    }).increases - 1);
+        $"Elf with the max calories is {totals.First()}",
+        $"Top 3 Elves with the max calories is {totals.First()}, {totals.Second()}, {totals.Third()}",
+        $"Top 3 Elves with the max calories sum is {totals.Take(3).Sum()}"
+    });
