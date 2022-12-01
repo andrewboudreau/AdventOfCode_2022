@@ -1,10 +1,10 @@
 # AdventOfCode_2022
 C# solutions for the 2022 Advent of Code.
 
-# Day00: How to use the tools
+## Day00: How to use the tools
 ```csharp
-
-// The Read extensions streams data form the console input or a given file contents to make parsing inputs really easy.
+// The Read extensions streams data form the console input 
+//  or a given file contents to make parsing inputs really easy.
 public static IEnumerable<string?> Read()
 {
     var args = Environment.GetCommandLineArgs();
@@ -26,7 +26,7 @@ public static IEnumerable<string?> Read()
     AdventOfCode_2022\Day01> dotnet run problem.txt
 ```
 
-# Day01: An exercise in LINQ
+## Day01: An exercise in LINQ
 ```csharp
 // How to use the Read extensions.
 Read()
