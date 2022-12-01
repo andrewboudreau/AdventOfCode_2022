@@ -45,7 +45,7 @@ Read()
     .ToConsole(totals => new[]
     {
         $"Elf with the max calories is {totals.First()}",
-        $"Top 3 Elves with the max calories is {totals.First()}, {totals.Second()}, {totals.Third()}",
+        $"Top 3 Elves with the max calories are {totals.First()}, {totals.Second()}, {totals.Third()}",
         $"Top 3 Elves with the max calories sum is {totals.Take(3).Sum()}"
     });
 ```
