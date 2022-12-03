@@ -49,3 +49,18 @@ Read()
         $"Top 3 Elves with the max calories sum is {totals.Take(3).Sum()}"
     });
 ```
+
+## Day02: Running a rock, paper, scissor, game engine by replaying a list of matches.
+```csharp
+Read()
+    .Aggregate(
+        new RockPaperScissor(),
+        (game, match) => game.PartOneStrategy(match))
+    .ToConsole("Part One");
+
+Read()
+    .Aggregate(
+        new RockPaperScissor(),
+        (game, match) => game.PartTwoStrategy(match))
+    .ToConsole("Part Two");
+```
