@@ -2,7 +2,7 @@
 C# solutions for the 2022 Advent of Code.
 [Advent of Code 2022](https://adventofcode.com)
 
-## Day00: How to use the tools
+## Day00: How to use the Read()
 ```csharp
 // The Read extensions streams data form the console input 
 //  or a given file contents to make parsing inputs really easy.
@@ -51,17 +51,55 @@ Read()
     });
 ```
 
-## Day02: Running a rock, paper, scissor, game engine by replaying a list of matches.
+## Day02: Rock, Paper, Scissor game engine
+Given a list of matches, calculate your score.  
+Read works great to read each rows of the input as a round. `Aggregate` gives an easy way to perform an operation on each round, and even provides a way to seed the starting system.
+
+A RockPaperScissor game engine seeds the aggregate operation which performs a match evaluation on each input line.
 ```csharp
-Read()
+Read(x => x!)
     .Aggregate(
         new RockPaperScissor(),
-        (game, match) => game.PartOneStrategy(match))
+        (game, match) => game.Evaluate(
+            Shoot.From(match.Player()),
+            Shoot.From(match.Opponent())))
     .ToConsole("Part One");
 
-Read()
+Read(x => x!)
     .Aggregate(
         new RockPaperScissor(),
-        (game, match) => game.PartTwoStrategy(match))
+        (game, match) =>
+        {
+            var them = Shoot.From(match.Opponent());
+            var you = match.Player() switch
+            {
+                'X' => them.Wins(),
+                'Y' => them.Draws(),
+                'Z' => them.Loses(),
+                _ => throw new NotImplementedException()
+            };
+
+            return game.Evaluate(you, them);
+        })
+    .ToConsole("Part Two");
+```
+
+## Day03: Linq intersections and sums.
+```csharp
+Read(x => x!)
+    .Aggregate(0, (sum, sack) =>
+        sum += sack[..(sack.Length / 2)]
+            .Intersect(sack[(sack.Length / 2)..])
+            .Sum(x => Value(x)))
+    .ToConsole("Part One");
+
+
+Read(x => x!)
+    .Chunk(3)
+    .Aggregate(0, (sum, batch) =>
+        sum += batch.First()
+            .Intersect(batch.Second())
+            .Intersect(batch.Third())
+            .Sum(x => Value(x)))
     .ToConsole("Part Two");
 ```

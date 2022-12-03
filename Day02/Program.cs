@@ -1,24 +1,34 @@
 ﻿using Day00;
-
 using static Day00.ReadInputs;
 
-Read()
+Read(x => x!)
     .Aggregate(
         new RockPaperScissor(),
-        (game, match) => game.PartOneStrategy(match!))
+        (game, match) => game.Evaluate(
+            Shoot.From(match.Player()),
+            Shoot.From(match.Opponent())))
     .ToConsole("Part One");
 
-Read()
+Read(x => x!)
     .Aggregate(
         new RockPaperScissor(),
-        (game, match) => game.PartTwoStrategy(match!))
+        (game, match) =>
+        {
+            var them = Shoot.From(match.Opponent());
+            var you = match.Player() switch
+            {
+                'X' => them.Wins(),
+                'Y' => them.Draws(),
+                'Z' => them.Loses(),
+                _ => throw new NotImplementedException()
+            };
+
+            return game.Evaluate(you, them);
+        })
     .ToConsole("Part Two");
 
 public class RockPaperScissor
 {
-    private static readonly int player = 2;
-    private static readonly int opponent = 0;
-
     public int OpponentScore { get; private set; }
 
     public int Score { get; private set; }
@@ -32,23 +42,6 @@ public class RockPaperScissor
 
         Matches++;
         return this;
-    }
-
-    public RockPaperScissor PartOneStrategy(string match)
-        => Evaluate(Shoot.From(match[player]), Shoot.From(match[opponent]));
-
-    public RockPaperScissor PartTwoStrategy(string match)
-    {
-        var them = Shoot.From(match[opponent]);
-        var you = match[player] switch
-        {
-            'X' => them.Wins(),
-            'Y' => them.Draws(),
-            'Z' => them.Loses(),
-            _ => throw new NotImplementedException()
-        };
-
-        return Evaluate(you, them);
     }
 
     public override string ToString()
@@ -151,4 +144,10 @@ public record Scissor() : Shoot(3)
             _ => throw new NotImplementedException()
         } + Value;
     }
+}
+
+public static class RockPaperScissorParsingExtensions
+{
+    public static char Player(this string match) => match[2];
+    public static char Opponent(this string match) => match[0];
 }
