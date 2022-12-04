@@ -11,6 +11,11 @@
             //Console.WriteLine($"{this}");
         }
 
+        public Line(int x1, int x2)
+            : this(x1, 0, x2, 0)
+        {
+        }
+
         public Line(params int[] coords)
             : this(coords[0], coords[1], coords[2], coords[3])
         {
@@ -20,6 +25,11 @@
         public int Y1 { get; }
         public int X2 { get; }
         public int Y2 { get; }
+
+        public int MinX => Math.Min(X1, X2);
+        public int MinY => Math.Min(Y1, Y2);
+        public int MaxX => Math.Max(X1, X2);
+        public int MaxY => Math.Max(Y1, Y2);
 
         public bool Horizontal => Y1 == Y2;
 

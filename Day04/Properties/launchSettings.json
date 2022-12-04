@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Day04-Sample": {
+      "commandName": "Project",
+      "commandLineArgs": "sample.txt"
+    },
+    "Day04-Problem": {
+      "commandName": "Project",
+      "commandLineArgs": "problem.txt"
+    }
+  }
+}
