@@ -37,15 +37,20 @@ namespace Day00
 
     public class Deck : List<Card>
     {
+        public Deck(bool empty = false)
+            : base(empty ? Enumerable.Empty<Card>() : Cards.All())
+        {
+        }
+
         public Deck()
-            : base(Cards.All())
+            : this(false)
         {
         }
 
         public Deck Shuffle()
             => Cards.Shuffle(this);
 
-        public Card Deal(List<Card>? hand = default)
+        public Card Deal(Deck destination)
         {
             if (Count == 0)
             {
@@ -58,8 +63,30 @@ namespace Day00
                 throw new InvalidOperationException($"Deck has cards but remove failed top card {top}.");
             }
 
-            hand?.Add(top);
+            destination.Accept(top, this);
             return top;
+        }
+
+        public Card Deal(List<Card>? destination = default)
+        {
+            if (Count == 0)
+            {
+                throw new InvalidOperationException("The deck is empty.");
+            }
+
+            Card top = this[0];
+            if (!Remove(top))
+            {
+                throw new InvalidOperationException($"Deck has cards but remove failed top card {top}.");
+            }
+
+            destination?.Add(top);
+            return top;
+        }
+
+        public void Accept(Card card, Deck from)
+        {
+            Add(card);
         }
 
         public override string ToString()
