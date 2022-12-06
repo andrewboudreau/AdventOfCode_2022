@@ -144,3 +144,38 @@ public static class ISolverExtensions
     }
 }
 ```
+
+# Day 06: A string processing solution
+Some times just brute forcing for an active signal makes it easy
+```csharp
+for (var i = 4; i < input.Length; i++)
+{
+    if (
+        input[i - 1] != input[i - 2] &&
+        input[i - 1] != input[i - 3] &&
+        input[i - 1] != input[i - 4] &&
+        input[i - 2] != input[i - 3] &&
+        input[i - 2] != input[i - 4] &&
+        input[i - 3] != input[i - 4])
+    {
+        answer = i;
+        break;
+    }
+}
+
+Console.WriteLine($"Stopped at index {answer}");
+Console.WriteLine($"{input.ToString().Substring(answer - 4, 4)}");
+```
+
+Not really sure how performant the part2 solution is but I think it's `OK`
+```csharp
+for (var end = 14; end < input.Length - 1; end++)
+{
+    var hash = input[(end - 14)..end].ToImmutableArray().ToImmutableHashSet();
+    if (hash.Count == 14)
+    {
+        partTwo = end;
+        break;
+    }
+}
+```
