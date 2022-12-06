@@ -1,6 +1,6 @@
 ﻿using Day00;
+using Day00.Solvers;
 
-using System.Collections;
 using System.Text;
 
 using static Day00.ReadInputs;
@@ -11,14 +11,16 @@ Read()
 
 var crane9001 = new CraneSystem(true);
 Read()
-    .SolveWith(crane9001)
+    .SolveWith(
+        prepareWith: (solver, input) => solver.Load(input),
+        solveWith: crane9001)
     .ToConsole("Part Two");
 
 /// <summary>
 /// The solution for day 5. 
 /// A crane system which shuffles stacks of items per a given set of intial condition and instructions.
 /// </summary>
-public class CraneSystem : ISolve
+public class CraneSystem : Solution
 {
     private readonly List<List<char>> builder = new();
     private readonly List<Stack<char>> stacks = new();
@@ -38,7 +40,7 @@ public class CraneSystem : ISolve
         this.isVersion9001 = isVersion9001;
     }
 
-    public CraneSystem Load(string? row)
+    public override CraneSystem Load(string? row)
     {
         if (row is null || row.Length == 0)
             return this;
@@ -118,7 +120,7 @@ public class CraneSystem : ISolve
         return this;
     }
 
-    public CraneSystem Solve()
+    public override CraneSystem Solve()
     {
         return isVersion9001 ?
             Version9001() :
@@ -210,25 +212,14 @@ public class CraneSystem : ISolve
 
         return buffer.ToString();
     }
-
-    ISolve ISolve.Load(string? data) => Load(data);
-
-    ISolve ISolve.Solve() => Solve();
 }
 
-public class Plans : IEnumerable<(int Count, int From, int To)>
+public class Plans : EnumerableTuples<(int Count, int From, int To)>
 {
-    private readonly List<(int, int, int)> plans = new();
-
-    public void Add(string plan)
+    public override IEnumerable<(int Count, int From, int To)> Add(string row)
     {
-        var parts = plan.Split(' ');
-        plans.Add((int.Parse(parts[1]), int.Parse(parts[3]) - 1, int.Parse(parts[5]) - 1));
+        var parts = row.Split(' ');
+        values.Add((int.Parse(parts[1]), int.Parse(parts[3]) - 1, int.Parse(parts[5]) - 1));
+        return this;
     }
-
-    public IEnumerator<(int Count, int From, int To)> GetEnumerator()
-        => plans.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator()
-        => GetEnumerator();
 }

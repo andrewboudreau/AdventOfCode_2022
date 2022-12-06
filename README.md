@@ -103,3 +103,44 @@ Read(x => x!)
             .Sum(x => Value(x)))
     .ToConsole("Part Two");
 ```
+
+
+## Day05: A crane simulation. 
+The challenge moves chars between collections. The code users `Solution` to provides 2 simple interfaces to 1) Load Data, 2) Solve a problem using the given data.
+
+```csharp
+Read()
+    .SolveWith<CraneSystem>()
+    .ToConsole("Part One");
+
+var crane9001 = new CraneSystem(true);
+Read()
+    .SolveWith(
+        prepareWith: (solver, input) => solver.Load(input),
+        solveWith: crane9001)
+    .ToConsole("Part Two");
+
+```
+
+The supporting extensions methods bring the solution together with the input stream to make the Program easier to write. 
+```csharp
+public static class ISolverExtensions
+{
+    public static TSolver SolveWith<TSolver>(this IEnumerable<string?> source, TSolver? solveWith = default)
+        where TSolver : ISolve, ILoadInput, new()
+            => SolveWith(source, (solver, row) => (TSolver)solver.Load(row), solveWith);
+
+    public static TSolver SolveWith<TSolver>(this IEnumerable<string?> source, Func<TSolver, string?, TSolver> prepareWith, TSolver? solveWith = default) 
+        where TSolver : ISolve, new()
+    {
+        solveWith ??= new TSolver();
+        foreach (var row in source)
+        {
+            solveWith = prepareWith(solveWith, row);
+        }
+
+        solveWith.Solve();
+        return solveWith;
+    }
+}
+```
