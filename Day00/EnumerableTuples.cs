@@ -6,7 +6,12 @@ namespace Day00
     {
         protected readonly List<T> values = new();
 
-        public abstract IEnumerable<T> Add(string row);
+        public virtual void Add(string row)
+        {
+            values.Add(Parse(row));
+        }
+
+        public abstract T Parse(string row);
 
         public IEnumerator<T> GetEnumerator()
             => values.GetEnumerator();

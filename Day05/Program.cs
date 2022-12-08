@@ -216,10 +216,9 @@ public class CraneSystem : Solution
 
 public class Plans : EnumerableTuples<(int Count, int From, int To)>
 {
-    public override IEnumerable<(int Count, int From, int To)> Add(string row)
+    public override (int Count, int From, int To) Parse(string row)
     {
         var parts = row.Split(' ');
-        values.Add((int.Parse(parts[1]), int.Parse(parts[3]) - 1, int.Parse(parts[5]) - 1));
-        return this;
+        return (int.Parse(parts[1]), int.Parse(parts[3]) - 1, int.Parse(parts[5]) - 1);
     }
 }

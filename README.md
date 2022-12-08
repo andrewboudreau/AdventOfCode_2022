@@ -179,3 +179,12 @@ for (var end = 14; end < input.Length - 1; end++)
     }
 }
 ```
+
+#Day 07: Command processor
+
+```csharp
+var treefs = new TreeFs();
+Read()
+    .SolveWith(solveWith: treefs)
+    .ToConsole("\r\nDay 07 Solution");
+```

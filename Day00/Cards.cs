@@ -33,6 +33,23 @@ namespace Day00
             deck.Sort((left, right) => Random.Shared.Next(-1, 2));
             return deck;
         }
+
+        public static Deck FisherYates(Deck deck)
+        {
+            /*
+             * To shuffle an array a of n elements (indices 0..n-1):
+             *  for i from n - 1 downto 1 do
+             *      j = random integer with 0 <= j <= i
+             *          exchange a[j] and a[i]
+             */
+            for (var i = deck.Count - 1; i > 0; i--)
+            {
+                var j = Random.Shared.Next(0, i + 1);
+                (deck[j], deck[i]) = (deck[i], deck[j]);
+            }
+
+            return deck;
+        }
     }
 
     public class Deck : List<Card>
@@ -49,6 +66,9 @@ namespace Day00
 
         public Deck Shuffle()
             => Cards.Shuffle(this);
+
+        public Deck FisherYates()
+            => Cards.FisherYates(this);
 
         public Card Deal(Deck destination)
         {
@@ -205,10 +225,10 @@ namespace Day00
         public static string ToString(this List<Card> source)
             => ToString(source.ToArray());
 
-        public static string ToString(this Card[] source)
+        public static string ToString(this Card[] source, bool disableMultiline = false)
         {
             int size = 13;
-            bool multiline = source.Length > size;
+            bool multiline = source.Length > size && !disableMultiline;
 
             var sb = new StringBuilder();
             if (multiline)
@@ -229,7 +249,7 @@ namespace Day00
                         sb.AppendFormat("{0}", card);
                     }
 
-                    if (card != chunk[^1])
+                    if (card != chunk[^1] || disableMultiline)
                     {
                         sb.Append(' ');
                     }
