@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Sample": {
+      "commandName": "Project",
+      "commandLineArgs": "sample.txt"
+    },
+    "Problem": {
+      "commandName": "Project",
+      "commandLineArgs": "problem.txt"
+    }
+  }
+}
