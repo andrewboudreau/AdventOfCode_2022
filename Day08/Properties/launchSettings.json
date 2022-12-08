@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Sample": {
+      "commandName": "Project",
+      "commandLineArgs": "sample.txt"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Problem": {
+      "commandName": "Project",
+      "commandLineArgs": "problem.txt"
+    }
+  }
+}

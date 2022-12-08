@@ -7,7 +7,7 @@
 
     public interface ILoadInput
     {
-        ISolve Load(string? data);
+        ISolve Load(string? line);
     }
 
     public static class ISolverExtensions

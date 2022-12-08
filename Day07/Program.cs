@@ -37,21 +37,21 @@ public class TreeFs : Solution
         => CurrentFolder = CurrentFolder.Parent
             ?? throw new InvalidOperationException($"{CurrentFolder.Name} doesn't have a parent folder.");
 
-    public override ISolve Load(string? data)
+    public override ISolve Load(string? line)
     {
-        if (data is null)
+        if (line is null)
         {
             throw new InvalidOperationException("null value in load");
         }
 
-        if (data == "$ ls")
+        if (line == "$ ls")
         {
             return this;
         }
 
-        if (data.StartsWith("$ cd"))
+        if (line.StartsWith("$ cd"))
         {
-            var name = data.Split(' ')[2];
+            var name = line.Split(' ')[2];
             switch (name)
             {
                 case "/":
@@ -71,7 +71,7 @@ public class TreeFs : Solution
             }
         }
 
-        (string Parameter, string Name) = data.Split(' ');
+        (string Parameter, string Name) = line.Split(' ');
         if (Parameter == "dir")
         {
             var newFolder = CurrentFolder.AddFolder(Name);
@@ -86,7 +86,7 @@ public class TreeFs : Solution
             return this;
         }
 
-        throw new InvalidOperationException($"Cound not parse row '{data}'.");
+        throw new InvalidOperationException($"Cound not parse row '{line}'.");
     }
 
     public override ISolve Solve()
