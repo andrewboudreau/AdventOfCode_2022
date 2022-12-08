@@ -145,7 +145,7 @@ public static class ISolverExtensions
 }
 ```
 
-# Day 06: A string processing solution
+## Day 06: A string processing solution
 Some times just brute forcing for an active signal makes it easy
 ```csharp
 for (var i = 4; i < input.Length; i++)
@@ -180,7 +180,7 @@ for (var end = 14; end < input.Length - 1; end++)
 }
 ```
 
-#Day 07: Command processor
+## Day 07: Command processor
 
 ```csharp
 var treefs = new TreeFs();
