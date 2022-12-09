@@ -216,13 +216,32 @@ grid.Each(tree =>
 });
 ```
 
-An extension method to that supplies all the nodes from the current node and up. Similar to line,
+An extension method to that supplies all the nodes from the current node and up. Similar to path but for the grid system.
 ```csharp
  public static IEnumerable<T> UpFrom<T>(this Grid<T> grid, Node<T> node)
 {
     for (var i = node.Y - 1; i >= 0; i--)
     {
         yield return grid[node.X, i]!;
+    }
+}
+```
+
+We also make use of a fun inclusive version of LINQ take until.
+```csharp
+public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+{
+    foreach (T item in source)
+    {
+        if (!predicate(item))
+        {
+            yield return item;
+        }
+        else
+        {
+            yield return item;
+            yield break;
+        }
     }
 }
 ```
