@@ -47,6 +47,8 @@ public class Grid<T> : IEnumerable<Node<T>>
         }
     }
 
+    public int Width => width;
+
     public IEnumerable<Node<T>> Neighbors(Node<T> position, bool withDiagonals = true)
     {
         if (withDiagonals && this[position.X - 1, position.Y + 1] is Node<T> upLeft)
@@ -122,14 +124,14 @@ public class Grid<T> : IEnumerable<Node<T>>
         }
     }
 
-    public Grid<T> Render(int x = 25, int y = 2, Action<string>? draw = default, Action<int, int>? setPosition = default)
+    public Grid<T> Render(int x = 25, int y = 2, Action<IEnumerable<Node<T>>>? draw = default, Action<int, int>? setPosition = default)
     {
         draw ??= Console.WriteLine;
         setPosition ??= Console.SetCursorPosition;
         foreach (var row in Rows())
         {
             setPosition(x, y++);
-            draw(string.Join("", row.Select(x => x.Value)));
+            draw(row);
         }
 
         return this;
@@ -152,4 +154,39 @@ public class Grid<T> : IEnumerable<Node<T>>
 
     IEnumerator IEnumerable.GetEnumerator()
         => GetEnumerator();
+}
+
+public static class GridExtensions
+{
+    public static IEnumerable<T> UpFrom<T>(this Grid<T> grid, Node<T> node)
+    {
+        for (var i = node.Y - 1; i >= 0; i--)
+        {
+            yield return grid[node.X, i]!;
+        }
+    }
+
+    public static IEnumerable<T> DownFrom<T>(this Grid<T> grid, Node<T> node)
+    {
+        for (var i = node.Y + 1; i < grid.Width; i++)
+        {
+            yield return grid[node.X, i]!;
+        }
+    }
+
+    public static IEnumerable<T> LeftFrom<T>(this Grid<T> grid, Node<T> node)
+    {
+        for (var i = node.X - 1; i >= 0; i--)
+        {
+            yield return grid[i, node.Y]!;
+        }
+    }
+
+    public static IEnumerable<T> RightFrom<T>(this Grid<T> grid, Node<T> node)
+    {
+        for (var i = node.X + 1; i < grid.Width; i++)
+        {
+            yield return grid[i, node.Y]!;
+        }
+    }
 }

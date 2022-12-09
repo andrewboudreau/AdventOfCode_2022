@@ -188,3 +188,41 @@ Read()
     .SolveWith(solveWith: treefs)
     .ToConsole("\r\nDay 07 Solution");
 ```
+
+## Day 08: Get the Grid out
+Day 8 requires a grid and some basic grid ray casting.
+
+We get to make use of the existing grid and a few extensions methods to help walk the grid.
+
+```csharp
+var grid = new Grid<int>(ReadAsRowsOfInts());
+grid.Each(tree =>
+{
+    if (
+        // Is tree on the edge?
+        tree.X == 0 ||
+        tree.Y == 0 ||
+        tree.X == grid.Width - 1 ||
+        tree.Y == grid.Width - 1 ||
+
+        // is tree visible from edge
+        grid.UpFrom(tree).All(height => height < tree.Value) ||
+        grid.LeftFrom(tree).All(height => height < tree.Value) ||
+        grid.DownFrom(tree).All(height => height < tree.Value) ||
+        grid.RightFrom(tree).All(height => height < tree.Value))
+    {
+        visible++;
+    }
+});
+```
+
+An extension method to that supplies all the nodes from the current node and up. Similar to line,
+```csharp
+ public static IEnumerable<T> UpFrom<T>(this Grid<T> grid, Node<T> node)
+{
+    for (var i = node.Y - 1; i >= 0; i--)
+    {
+        yield return grid[node.X, i]!;
+    }
+}
+```
