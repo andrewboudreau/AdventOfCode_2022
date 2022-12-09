@@ -216,9 +216,9 @@ grid.Each(tree =>
 });
 ```
 
-An extension method to that supplies all the nodes from the current node and up. Similar to path but for the grid system.
+An extension method to that supplies all the nodes Up from the give node. Enumerates the values from the current node, up, left, down, and to the right. Allows us to inspect the in a direction from a given location.
 ```csharp
- public static IEnumerable<T> UpFrom<T>(this Grid<T> grid, Node<T> node)
+public static IEnumerable<T> UpFrom<T>(this Grid<T> grid, Node<T> node)
 {
     for (var i = node.Y - 1; i >= 0; i--)
     {
