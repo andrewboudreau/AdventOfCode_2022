@@ -227,7 +227,7 @@ public static IEnumerable<T> UpFrom<T>(this Grid<T> grid, Node<T> node)
 }
 ```
 
-We also make use of a fun inclusive version of LINQ take until.
+We also make an inclusive version of the LINQ extension to TakeUntil something is true.
 ```csharp
 public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bool> predicate)
 {
