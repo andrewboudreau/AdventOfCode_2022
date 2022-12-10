@@ -251,13 +251,14 @@ public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bo
 ```csharp
 List<(int X, int Y)[]> rope = ...
 
-// The physics step for each knot.
+// the movement of the head knot.
 foreach (var (X,Y) in movement)
 {
 	var knots = ((int X, int Y)[])rope[^1].Clone();
 	knots[0] = (X, Y);
 	rope.Add(knots);
 
+    // The physics step for each link in the rope.
 	for (var i = 1; i < knotCount; i++)
 	{
 		var head = knots[i - 1];
