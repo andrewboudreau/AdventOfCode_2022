@@ -248,7 +248,7 @@ public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bo
 
 ## Day 09: A physics engine with keyframe animations of a rope.
 
-[](./Day09/docs/part2_sample.gif)
+[](Day09/docs/part2_sample.gif)
 ```csharp
 List<(int X, int Y)[]> rope = ...
 
