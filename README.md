@@ -245,3 +245,66 @@ public static IEnumerable<T> TakeUntil<T>(this IEnumerable<T> source, Func<T, bo
     }
 }
 ```
+
+## Day 09: A physics engine with keyframe animations of a rope.
+
+[](./Day09/docs/part2_sample.gif)
+```csharp
+List<(int X, int Y)[]> rope = ...
+
+// The physics step for each knot.
+foreach (var (X,Y) in movement)
+{
+	var knots = ((int X, int Y)[])rope[^1].Clone();
+	knots[0] = (X, Y);
+	rope.Add(knots);
+
+	for (var i = 1; i < knotCount; i++)
+	{
+		var head = knots[i - 1];
+		var tail = knots[i];
+
+		var x = head.X > tail.X ? 1 : -1;
+		var y = head.Y > tail.Y ? 1 : -1;
+
+		var distance = tail.DistanceTo(head);
+		if (distance == 0 || distance == 1)
+		{
+			// tail is close enough
+		}
+		else if (distance == 2)
+		{
+			if (tail.X != head.X && tail.Y != head.Y)
+			{
+				// tail and head are diagonal.
+				// tail is close enough
+			}
+			else if (tail.X == head.X)
+			{
+				// tail needs to move in the Y direction
+				knots[i] = (tail.X, tail.Y + y);
+			}
+			else if (tail.Y == head.Y)
+			{
+				// tail needs to move in the X direction
+				knots[i] = (tail.X + x, tail.Y);
+			}
+			else
+			{
+				Console.WriteLine($"Frame {rope.Count}: Knots:{string.Join(" ", knots)}");
+				throw new UnreachableException();
+			}
+		}
+		else if (distance == 3 || distance == 4)
+		{
+			// tails needs to move diagonal
+			knots[i] = (tail.X + x, tail.Y + y);
+		}
+		else
+		{
+			Console.WriteLine($"Frame {rope.Count}:{string.Join(" ", knots)}");
+			throw new UnreachableException($"distance is too high {distance}");
+		}
+	}
+}
+```

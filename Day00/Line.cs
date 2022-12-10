@@ -37,7 +37,7 @@
 
         public bool Diagonal => !Horizontal && !Veritical;
 
-        public IEnumerable<(int, int)> Path()
+        public IEnumerable<(int X, int Y)> Path()
         {
             var current = (X1, Y1);
             while (current != (X2, Y2))
