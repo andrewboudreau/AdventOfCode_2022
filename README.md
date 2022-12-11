@@ -344,4 +344,4 @@ foreach (var scanline in computer.Cycles.Chunk(40))
 }
 ```
 
-![VGA](Day09/docs/part2_sample.gif)
+![VGA](Day10/docs/day10-answer.png)
