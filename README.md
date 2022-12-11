@@ -1,4 +1,4 @@
-# AdventOfCode_2022
+﻿# AdventOfCode_2022
 C# solutions for the 2022 Advent of Code.
 [Advent of Code 2022](https://adventofcode.com)
 
@@ -308,3 +308,40 @@ foreach (var (X,Y) in movement)
 	}
 }
 ```
+
+## Day 10: The smallest C# emulator.
+Writing emulators is so fun and day 10 might be the smallest emulator with display I've ever made.
+The instruction set is 2 operations and 1 is NOP! The other is add, and there is one register.
+```csharp
+(int Register, List<int> Cycles) start = (1, new List<int>());
+
+var computer = Read()
+    .Aggregate(start, (computer, instruction) =>
+    {
+        ArgumentNullException.ThrowIfNull(instruction);
+
+        computer.Cycles.Add(computer.Register);
+        if (instruction[0] == 'a')
+        {
+            computer.Cycles.Add(computer.Register);
+            computer.Register += int.Parse(instruction.Split(" ")[1]);
+        }
+        return computer;
+    });
+
+foreach (var scanline in computer.Cycles.Chunk(40))
+{
+    foreach (var pixel in scanline.Select((register, index) => (register, index)))
+    {
+        bool on = 
+            pixel.register - 1 <= pixel.index && 
+            pixel.index <= pixel.register + 1;
+
+        Console.Write(on ? "█" : " ");
+    }
+
+    Console.WriteLine();
+}
+```
+
+![VGA](Day09/docs/part2_sample.gif)

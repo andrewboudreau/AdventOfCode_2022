@@ -175,17 +175,6 @@ public class RopeSimulation : Solution
     {
         return others.Concat(Enumerable.Repeat((offset.X, offset.Y), total - others.Length)).ToArray();
     }
-
-    private static (int X, int Y)[] Copy(params (int X, int Y)[] frameToCopy)
-    {
-        var frame = new (int X, int Y)[knotCount];
-        for (var i = 0; i < frameToCopy.Length; i++)
-        {
-            frame[i] = (frameToCopy[i].X, frameToCopy[i].Y);
-        }
-
-        return frame;
-    }
 }
 
 public static class PositionExtensions
