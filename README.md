@@ -345,3 +345,42 @@ foreach (var scanline in computer.Cycles.Chunk(40))
 ```
 
 <img src="Day10/docs/day10-answer.png" width="200" />
+
+
+## Day 11: Multi monkey message party
+Queue message processing to multiple nodes. Each node performs a transformation and passes on the data.
+```csharp
+public class Monkey<T>
+{
+    private readonly Queue<T> items;
+    private readonly Func<T, T> operation;
+    private readonly Func<T, int> route;
+    private int inspections = 0;
+
+    public Monkey(IEnumerable<T> items, Func<T, T> operation, Func<T, int> route)
+    {
+        this.items = new Queue<T>(items);
+        this.operation = operation;
+        this.route = route;
+    }
+
+    public IEnumerable<T> Items => items;
+
+    public int Inspections => inspections;
+
+    public void ProcessItems(List<Monkey> monkeys)
+    {
+        while (items.Count > 0)
+        {
+            inspections++;
+
+            var item = items.Dequeue();
+            item = operation(item);
+            monkeys[route(item)].Receive(item);
+        }
+    }
+
+    public void Receive(T item) 
+        => items.Enqueue(item);
+}
+```

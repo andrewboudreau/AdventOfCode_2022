@@ -6,12 +6,34 @@
             => source.Select(c => (int)char.GetNumericValue(c));
 
         public static IEnumerable<IEnumerable<int>> ReadAsRowsOfInts()
-        => Read(AsInts).Select(x => x);
+            => Read(AsInts).Select(x => x);
 
         public static IEnumerable<T> Read<T>(Func<string, T> factory) =>
             Read()
                 .TakeWhile(x => !string.IsNullOrEmpty(x))
                 .Select(x => factory(x!));
+
+        public static IEnumerable<T> ReadRecords<T>(Func<string[], T> factory)
+        {
+            var records = new List<string>();
+            foreach (var row in Read())
+            {
+                if (string.IsNullOrEmpty(row))
+                {
+                    yield return factory(records.ToArray());
+                    records.Clear();
+                }
+                else
+                {
+                    records.Add(row!);
+                }
+            }
+
+            if (records.Count > 0)
+            {
+                yield return factory(records.ToArray());
+            }
+        }
 
         public static IEnumerable<int> ReadInts() =>
             Read(x => int.Parse(x));
