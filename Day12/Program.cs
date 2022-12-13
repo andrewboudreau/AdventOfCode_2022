@@ -24,6 +24,8 @@ foreach (var node in grid)
 
 grid.FillDistances(from: end);
 DrawGrid();
+Console.WriteLine($"Part One: Distance to start is {start.Distance}");
+
 var cursor = Console.GetCursorPosition();
 while (start != end)
 {
@@ -32,8 +34,6 @@ while (start != end)
     start = start.Neighbors.OrderBy(x => x.Distance).First();
 }
 Console.SetCursorPosition(cursor.Left, cursor.Top);
-
-Console.WriteLine($"Part One: Distance to start is {start.Distance}");
 
 var part2 = grid.Nodes()
     .Where(x => x.Value == 'a')

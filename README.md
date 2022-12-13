@@ -390,6 +390,8 @@ Finally feeling prepared this year, the grid is coming in handy.
 
 The trick to this problem is setting up the neighbors, then traversing them finding all accessible locations to the end last location, assign distances, :check:.
 
+<img src="Day12/docs/day12-path.png" width="600" />
+
 ```csharp
 var grid =
     new Grid<char>(
@@ -429,4 +431,3 @@ public void FillDistances(Node<T> from)
 }
 
 ```
-<img src="Day12/docs/day12-path.png" width="600" />
