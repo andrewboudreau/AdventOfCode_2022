@@ -46,7 +46,7 @@ var monkeys = ReadRecords(rows =>
             ParseInt(rows[4]) :
             ParseInt(rows[5]);
 
-    return new Monkey(items, operation.Compile(), passTo);
+    return new Monkey<BigInteger>(items, operation.Compile(), passTo);
 }).ToList();
 
 for (var round = 0; round < 10_000; round++)
@@ -71,25 +71,25 @@ for (var round = 0; round < 10_000; round++)
     }
 }
 
-public class Monkey
+public class Monkey<T>
 {
-    private readonly Queue<BigInteger> items;
-    private readonly Func<BigInteger, BigInteger> operation;
-    private readonly Func<BigInteger, int> passTo;
+    private readonly Queue<T> items;
+    private readonly Func<T, T> operation;
+    private readonly Func<T, int> passTo;
     private int inspections = 0;
 
-    public Monkey(IEnumerable<BigInteger> items, Func<BigInteger, BigInteger> operation, Func<BigInteger, int> passTo)
+    public Monkey(IEnumerable<T> items, Func<T, T> operation, Func<T, int> passTo)
     {
-        this.items = new Queue<BigInteger>(items);
+        this.items = new Queue<T>(items);
         this.operation = operation;
         this.passTo = passTo;
     }
 
-    public IEnumerable<BigInteger> Items => items;
+    public IEnumerable<T> Items => items;
 
     public int Inspections => inspections;
 
-    public void ProcessItems(List<Monkey> monkeys)
+    public void ProcessItems(List<Monkey<T>> monkeys)
     {
         while (items.Count > 0)
         {
@@ -101,6 +101,6 @@ public class Monkey
         }
     }
 
-    public void Receive(BigInteger item) 
+    public void Receive(T item)
         => items.Enqueue(item);
 }

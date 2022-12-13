@@ -384,3 +384,49 @@ public class Monkey<T>
         => items.Enqueue(item);
 }
 ```
+
+## Day 12: Path Finding
+Finally feeling prepared this year, the grid is coming in handy. 
+
+The trick to this problem is setting up the neighbors, then traversing them finding all accessible locations to the end last location, assign distances, :check:.
+
+```csharp
+var grid =
+    new Grid<char>(
+        rows: Read()!,
+        factory: row => row.Select(x => x));
+
+// Build up the appropriate neighbors.
+foreach (var node in grid)
+{
+    foreach (var near in grid.Neighbors(node, withDiagonals: false))
+    {
+        if (node.Value + 1 >= near.Value)
+        {
+            node.AddNeighbor(near);
+        }
+    }
+}
+
+// Fill in all the distances `from` a node
+public void FillDistances(Node<T> from)
+{
+    var nodes = new Queue<Node<T>>();
+    from.SetDistance(0);
+    nodes.Enqueue(from);
+
+    while (nodes.TryDequeue(out var current))
+    {
+        foreach (var node in Nodes().Where(x => x.Neighbors.Contains(current)).Except(nodes))
+        {
+            if (current.Distance + 1 < node.Distance)
+            {
+                nodes.Enqueue(node);
+                node.SetDistance(current.Distance + 1);
+            }
+        }
+    }
+}
+
+```
+<img src="Day12/docs/day12-path.png" width="600" />

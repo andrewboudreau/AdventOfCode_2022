@@ -51,6 +51,31 @@ public class Grid<T> : IEnumerable<Node<T>>
 
     public IEnumerable<Node<T>> Neighbors(Node<T> position, bool withDiagonals = true)
     {
+        if (withDiagonals && this[position.X + 1, position.Y - 1] is Node<T> downRight)
+        {
+            yield return downRight;
+        }
+
+        if (this[position.X + 1, position.Y] is Node<T> right)
+        {
+            yield return right;
+        }
+
+        if (this[position.X, position.Y - 1] is Node<T> down)
+        {
+            yield return down;
+        }
+
+        if (withDiagonals && this[position.X - 1, position.Y - 1] is Node<T> downLeft)
+        {
+            yield return downLeft;
+        }
+
+        if (this[position.X - 1, position.Y] is Node<T> left)
+        {
+            yield return left;
+        }
+
         if (withDiagonals && this[position.X - 1, position.Y + 1] is Node<T> upLeft)
         {
             yield return upLeft;
@@ -65,31 +90,6 @@ public class Grid<T> : IEnumerable<Node<T>>
         {
             yield return upRight;
         }
-
-        if (this[position.X - 1, position.Y] is Node<T> left)
-        {
-            yield return left;
-        }
-
-        if (this[position.X + 1, position.Y] is Node<T> right)
-        {
-            yield return right;
-        }
-
-        if (withDiagonals && this[position.X - 1, position.Y - 1] is Node<T> downLeft)
-        {
-            yield return downLeft;
-        }
-
-        if (this[position.X, position.Y - 1] is Node<T> down)
-        {
-            yield return down;
-        }
-
-        if (withDiagonals && this[position.X + 1, position.Y - 1] is Node<T> downRight)
-        {
-            yield return downRight;
-        }
     }
 
     public IEnumerable<Node<T>> Nodes()
@@ -97,6 +97,28 @@ public class Grid<T> : IEnumerable<Node<T>>
         for (var offset = 0; offset < nodes.Count; offset++)
         {
             yield return nodes[offset];
+        }
+    }
+
+    public void FillDistances(Node<T> from)
+    {
+        this.ResetVisited();
+        this.ResetDistances();
+
+        from.SetDistance(0);
+        var nodes = new Queue<Node<T>>();
+        nodes.Enqueue(from);
+
+        while (nodes.TryDequeue(out var current))
+        {
+            foreach (var node in Nodes().Where(x => x.Neighbors.Contains(current)).Except(nodes))
+            {
+                if (current.Distance + 1 < node.Distance)
+                {
+                    nodes.Enqueue(node);
+                    node.SetDistance(current.Distance + 1);
+                }
+            }
         }
     }
 
@@ -122,31 +144,6 @@ public class Grid<T> : IEnumerable<Node<T>>
         {
             yield return nodes.Skip(row * width).Take(width);
         }
-    }
-
-    public Grid<T> Render(int x = 25, int y = 2, Action<IEnumerable<Node<T>>>? draw = default, Action<int, int>? setPosition = default)
-    {
-        draw ??= Console.WriteLine;
-        setPosition ??= Console.SetCursorPosition;
-        foreach (var row in Rows())
-        {
-            setPosition(x, y++);
-            draw(row);
-        }
-
-        return this;
-    }
-
-    public Grid<T> WriteTo(Action<string>? draw = default)
-    {
-        draw ??= Console.WriteLine;
-        foreach (var row in Rows())
-        {
-            draw(string.Join("", row.Select(x => x.Value)));
-            //draw(string.Join("", row.Select(x => $"({x.X},{x.Y})[{x.Value}]")));
-        }
-
-        return this;
     }
 
     public IEnumerator<Node<T>> GetEnumerator()
@@ -187,6 +184,71 @@ public static class GridExtensions
         for (var i = node.X + 1; i < grid.Width; i++)
         {
             yield return grid[i, node.Y]!;
+        }
+    }
+
+    public static void ResetVisited<T>(this Grid<T> grid)
+        => grid.Each(node => node.ResetVisited());
+
+    public static void ResetDistances<T>(this Grid<T> grid)
+        => grid.Each(node => node.ResetDistance());
+}
+
+public static class GridRenderExtensions
+{
+    public static void Render<T>(this Grid<T> grid, Action<Node<T>, Action<string>> drawCell, Action<string>? draw = default)
+    {
+        draw ??= Console.Write;
+        foreach (var row in grid.Rows())
+        {
+            foreach (var node in row)
+            {
+                drawCell(node, draw);
+            }
+
+            draw(Environment.NewLine);
+        }
+    }
+
+    public static void Render<T>(this Grid<T> grid, Dictionary<(int X, int Y), string> display, Action<string>? draw = default)
+    {
+        draw ??= Console.Write;
+        foreach (var row in grid.Rows())
+        {
+            foreach (var node in row)
+            {
+                if (display.TryGetValue((node.X, node.Y), out var sprite))
+                {
+                    draw(sprite);
+                }
+                else
+                {
+                    draw(node.Value.ToString());
+                }
+            }
+
+            draw(Environment.NewLine);
+        }
+    }
+
+    public static void Render<T>(this Grid<T> grid, int x = 25, int y = 2, Action<IEnumerable<Node<T>>>? draw = default, Action<int, int>? setPosition = default)
+    {
+        draw ??= Console.WriteLine;
+        setPosition ??= Console.SetCursorPosition;
+        foreach (var row in grid.Rows())
+        {
+            setPosition(x, y++);
+            draw(row);
+        }
+    }
+
+    public static void Render<T>(this Grid<T> grid, Action<string>? draw)
+    {
+        draw ??= Console.WriteLine;
+        foreach (var row in grid.Rows())
+        {
+            draw(string.Join("", row.Select(x => x.Value)));
+            //draw(string.Join("", row.Select(x => $"({x.X},{x.Y})[{x.Value}]")));
         }
     }
 }

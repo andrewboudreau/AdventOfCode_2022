@@ -21,12 +21,76 @@ public class Node<T> : IEqualityComparer<T>, IEquatable<T>
 
     public int X { get; init; }
     public int Y { get; init; }
+
     public T Value { get; private set; }
+
+    public int Distance { get; private set; }
+
+    public int Visited { get; private set; }
+
+    public bool IsVisited => Visited > 0;
 
     public IEnumerable<Node<T>> Neighbors => neighbors;
 
+    public int Visit() => Visited += 1;
+
+    public void ResetVisited()
+    {
+        Visited = 0;
+    }
+
+    public void ResetDistance()
+    {
+        Distance = int.MaxValue;
+    }
+
+    public int SetDistance(int distance)
+    {
+        Visit();
+        Distance = distance;
+        return Distance;
+    }
+
+    public void FillDistances(int distance = 0)
+    {
+        SetDistance(distance);
+
+        foreach (var neighbor in neighbors)
+        {
+            if (!neighbor.IsVisited)
+            {
+                neighbor.FillDistances(distance + 1);
+            }
+            else if (neighbor.Distance > distance + 1)
+            {
+                neighbor.FillDistances(distance + 1);
+            }
+
+            if (neighbor.Visited > 5)
+            {
+                return;
+            }
+        }
+    }
+
+    public IEnumerable<Node<T>> ShortestPathTo(Node<T> end)
+    {
+        var current = this;
+        while (current != end)
+        {
+            var next = current.Neighbors
+                .OrderBy(x => x.Distance)
+                .First(x => !x.IsVisited);
+
+            next.Visit();
+
+            yield return next;
+            current = next;
+        }
+    }
+
     public T SetValue(T value)
-        => Value = value;
+            => Value = value;
 
     public T SetValue(Func<T, T> setter)
         => SetValue(setter(Value));
