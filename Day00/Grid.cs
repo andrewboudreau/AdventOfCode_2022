@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Immutable;
 
 public class Grid<T> : IEnumerable<Node<T>>
 {
@@ -92,13 +93,7 @@ public class Grid<T> : IEnumerable<Node<T>>
         }
     }
 
-    public IEnumerable<Node<T>> Nodes()
-    {
-        for (var offset = 0; offset < nodes.Count; offset++)
-        {
-            yield return nodes[offset];
-        }
-    }
+    public virtual IEnumerable<Node<T>> Nodes() => nodes;
 
     public void FillDistances(Node<T> from)
     {
@@ -138,7 +133,7 @@ public class Grid<T> : IEnumerable<Node<T>>
         return this;
     }
 
-    public IEnumerable<IEnumerable<Node<T>>> Rows()
+    public virtual IEnumerable<IEnumerable<Node<T>>> Rows()
     {
         for (var row = 0; row < nodes.Count / width; row++)
         {
@@ -207,6 +202,29 @@ public static class GridRenderExtensions
             }
 
             draw(Environment.NewLine);
+        }
+    }
+
+    public static void Render<T>(this Grid<T> grid, Action<Node<T>, Action<string>>? drawCell = default, Action<string>? draw = default, int? minX = 0, int? minY = 0, int? maxX = 1000, int? maxY = 1000)
+    {
+        draw ??= Console.Write;
+        drawCell ??= (node, render) => render(node.Value?.ToString() ?? "C");
+        foreach (var row in grid.Rows())
+        {
+            var any = false;
+            foreach (var node in row)
+            {
+                if (minX <= node.X && node.X <= maxX && minY <= node.Y && node.Y <= maxY)
+                {
+                    drawCell(node, draw);
+                    any = true;
+                }
+            }
+
+            if (any)
+            {
+                draw(Environment.NewLine);
+            }
         }
     }
 

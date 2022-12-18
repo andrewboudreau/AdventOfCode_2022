@@ -68,5 +68,5 @@ void DrawGrid()
         draw(node.Distance.ToString().Last().ToString());
 
         Console.ResetColor();
-    });
+    }, draw: default);
 }

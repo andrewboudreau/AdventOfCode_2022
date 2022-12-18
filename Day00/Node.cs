@@ -18,9 +18,13 @@ public class Node<T> : IEqualityComparer<T>, IEquatable<T>
         Value = value;
         neighbors = new List<Node<T>>();
     }
+    public Node((int x, int y, T value) node)
+        : this(node.x, node.y, node.value)
+    {
+    }
 
-    public int X { get; init; }
-    public int Y { get; init; }
+    public int X { get; private set; }
+    public int Y { get; private set; }
 
     public T Value { get; private set; }
 
@@ -94,6 +98,12 @@ public class Node<T> : IEqualityComparer<T>, IEquatable<T>
 
     public T SetValue(Func<T, T> setter)
         => SetValue(setter(Value));
+
+    public void SetPosition((int X, int Y) position)
+    {
+        X = position.X;
+        Y = position.Y;
+    }
 
     public void AddNeighbor(Node<T> neighbor)
         => neighbors.Add(neighbor);
